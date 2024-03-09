@@ -1,0 +1,7 @@
+2024-03-09 21:33:59 - root - INFO - Бот запущен
+2024-03-09 21:34:00 - root - INFO - Выполнение команды /start
+2024-03-09 21:34:02 - root - INFO - Выполнение команды /solve_task
+2024-03-09 21:34:06 - root - INFO - Выполнение команды continue_filter
+2024-03-09 21:36:32 - root - INFO - Выполнение команды continue_filter
+2024-03-09 21:38:48 - TeleBot - ERROR - Infinity polling: polling exited
+2024-03-09 21:38:48 - TeleBot - ERROR - Break infinity polling
