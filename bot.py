@@ -1,3 +1,7 @@
+
+# https://github.com/Chistiy-fun/GPThellper_bot.v.1.git
+# Бот: https://t.me/gpthellper_bot
+
 import json
 import logging
 from telebot import TeleBot
@@ -43,7 +47,8 @@ def start(message):
     bot.send_message(message.chat.id,
                      text=f"Привет, {user_name}! Я бот-помощник для решения душевных проблем!\n"
                           f"Ты можешь мне рассказать о твоих душевных проблемах и я выступлю в виде личного психолога и помогу тебе решить твою проблему.\n"
-                          f"Бывают слишком длинные ответы, тогда попроси меня продолжить решение.
+                            "Бывают слишком длинные ответы, тогда попроси меня продолжить решение.\n"
+                          "P.S Я не очень хорошо говорю на русском, поэтому иногда я могу сказать не понятные и не связанные слова.",
                      reply_markup=create_keyboard(["/solve_task", '/help']))
 
 # Команда /help
@@ -53,7 +58,8 @@ def support(message):
     bot.send_message(message.from_user.id,
                      text="Чтобы приступить к общению с ботом нажми на /solve_task, ну или просто напиши в чат.\n"
                           "Затем можешь написать свой запрос.\n\n"
-                          "Пример: 'Я мужчина, который разочаровался в жизни'",
+                          "Пример: 'Я мужчина, который разочаровался в жизни'\n\n"
+                     "Контакт для связи с разработчиком @chistiy_fun",
                      reply_markup=create_keyboard(["/solve_task"]))
 
 @bot.message_handler(commands=['debug'])
@@ -99,23 +105,32 @@ def get_promt(message):
             return
 
         users_history[user_id] = {
-            'system_content': ("Ты бот, который работает личным психологом. Ты должен душевно помогать пользователю решить свои проблемы."
-                               "Опираясь на проблему который указал пользователь, подбери ему лучший способ решения проблемы."),
+            'system_content': ("Я хочу, чтобы вы выступили в роли психолога. Я сообщу вам свои мысли. Я хочу, чтобы вы дали мне научные предположения, которые заставят меня чувствовать себя лучше"),
             'user_content': user_request,
             'assistant_content': "Решаем проблему на русском: "
         }
         save_to_json()
 
-    bot.send_message(message.chat.id, "Запрос в обработке.")
+    bot.send_message(message.chat.id, "Запрос в обработке.\n\nВремя ожидание до 5 минут...")
     logging.info("Запрос в обработке.")
     prompt = gpt.make_promt(users_history[user_id])
     resp = gpt.send_request(prompt)
     answer = resp.json()['choices'][0]['message']['content']
+
+    if answer == "":
+        answer = "Ответ окончен."
+
+
+
     users_history[user_id]["assistant_content"] += answer
     save_to_json()
     keyboard = create_keyboard(["Продолжить решение", "Завершить решение"])
     logging.info("Ответ пользователю успешно отправлен")
     bot.send_message(message.chat.id, answer, reply_markup=keyboard)
+
+
+
+
 
 @bot.message_handler(content_types=['text'], func=lambda message: message.text.lower() == "завершить решение")
 def end_task(message):
